@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards de Dermatopatologia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6; /* Light grayish-green */
+        }
+        .header-title {
+            font-family: 'Playfair Display', serif;
+        }
+        .flashcard-container {
+            perspective: 1000px;
+            min-height: 250px; /* Ensure minimum height for consistent card size */
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            border-radius: 12px; /* Increased border radius */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1); /* Softer shadow */
+        }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-radius: 12px; /* Increased border radius */
+            text-align: center;
+        }
+        .flashcard-front {
+            background-color: #ffffff; /* White */
+            color: #385751; /* Darker teal for text */
+            border: 1px solid #d0e0db; /* Soft border */
+        }
+        .flashcard-back {
+            background-color: #e0ebe8; /* Lighter teal for back */
+            color: #385751; /* Darker teal for text */
+            transform: rotateY(180deg);
+            border: 1px solid #c0d6d1; /* Soft border */
+        }
+        .flashcard-title {
+            font-size: 1.15rem; /* Slightly adjusted for more content */
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .flashcard-content {
+            font-size: 0.9rem; /* Slightly adjusted for more content */
+            line-height: 1.5;
+        }
+        .footer {
+            background-color: #385751; /* Dark teal */
+            color: #f4f7f6;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f4f7f6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a0b8b3; /* Muted teal for scrollbar thumb */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #82a39d; /* Darker on hover */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-gradient-to-r from-teal-600 via-emerald-600 to-green-600 text-white py-8 shadow-lg">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="header-title text-4xl md:text-5xl font-bold">Dermatopatologia Interativa</h1>
+            <p class="mt-2 text-lg opacity-90">Flashcards para Diagnóstico de Doenças Inflamatórias da Pele</p>
+            <p class="mt-1 text-sm opacity-80">Baseado no Método Algorítmico de Ackerman</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-semibold text-teal-700">Explore os Conceitos Fundamentais</h2>
+            <p class="mt-2 text-gray-600">Clique nos cartões para revelar as informações.</p>
+        </div>
+
+        <div id="flashcardGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            </div>
+    </main>
+
+    <footer class="footer py-8 mt-16">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-sm">&copy; 2025 Dermatologia Educacional. Conteúdo adaptado do material fornecido.</p>
+            <p class="text-xs mt-1 opacity-70">Esta página é para fins educacionais.</p>
+        </div>
+    </footer>
+
+    <script>
+        const flashcardData = [
+            // Padrões Básicos e Conceitos Iniciais
+            {
+                frontTitle: "Método Algorítmico",
+                frontContent: "O que é o Método Algorítmico em dermatopatologia?",
+                backTitle: "Definição",
+                backContent: "Um método de cálculo baseado no pensamento lógico e sequência ordenada, utilizado para o diagnóstico de doenças inflamatórias da pele, analisando padrões histológicos."
+            },
+            {
+                frontTitle: "Processos Patológicos",
+                frontContent: "Quais são os 5 principais processos patológicos identificados na visão panorâmica?",
+                backTitle: "Classificação Inicial",
+                backContent: "Neoplasia, Cisto, Malformação (hamartoma), Doença de depósito, Doença inflamatória (dermatite)."
+            },
+            {
+                frontTitle: "Padrões Básicos de Dermatites",
+                frontContent: "Cite os 8 padrões básicos de doenças inflamatórias da pele.",
+                backTitle: "Os 8 Padrões Fundamentais",
+                backContent: "1. Perivascular, 2. Nodular/Difusa, 3. Vesicobolhosa, 4. Vasculite, 5. Pustulosa, 6. Foliculite/Perifoliculite, 7. Fibrosante, 8. Paniculite."
+            },
+            // Dermatite Perivascular
+            {
+                frontTitle: "D. Perivascular: Subtipos",
+                frontContent: "Quais as 5 categorias da D. Perivascular baseadas nas alterações epidérmicas?",
+                backTitle: "Subtipos da D. Perivascular",
+                backContent: "1. Sem alteração epidérmica, 2. Com alterações de Interface, 3. Com alterações Balonizantes, 4. Com alterações Espongióticas, 5. Com alterações Psoriasiformes."
+            },
+            {
+                frontTitle: "Perivascular S/ Alt. Epid.: Pitiríase Versicolor",
+                frontContent: "Achado histológico da Pitiríase Versicolor (Perivascular s/ alt. epid.)?",
+                backTitle: "Achado: Pitiríase Versicolor",
+                backContent: "Esporos e hifas curtas ('espaguete e almôndegas') na camada córnea."
+            },
+            {
+                frontTitle: "Perivascular S/ Alt. Epid.: Lúpus Túmido",
+                frontContent: "Achado histológico do Lúpus Eritematoso Túmido?",
+                backTitle: "Achado: Lúpus Túmido",
+                backContent: "Infiltrado linfocitário perivascular e perianexial, abundante deposição de mucina intersticial."
+            },
+            {
+                frontTitle: "Perivascular S/ Alt. Epid.: Doença de Schamberg",
+                frontContent: "Achado histológico da Doença de Schamberg (dermatose purpúrica pigmentar)?",
+                backTitle: "Achado: Doença de Schamberg",
+                backContent: "Infiltrado linfocitário perivascular superficial, extravasamento de hemácias e depósitos de hemossiderina (siderófagos)."
+            },
+            {
+                frontTitle: "Perivascular S/ Alt. Epid.: Urticária",
+                frontContent: "Células no infiltrado perivascular e intersticial da Urticária plenamente desenvolvida?",
+                backTitle: "Achado: Urticária",
+                backContent: "Edema dérmico significativo, infiltrado esparso de linfócitos, eosinófilos e neutrófilos perivascular e intersticial."
+            },
+            // Interface
+            {
+                frontTitle: "D. de Interface: Subtipos",
+                frontContent: "Quais são os dois subtipos principais da dermatite de interface?",
+                backTitle: "Subtipos da D. de Interface",
+                backContent: "1. Vacuolar (degeneração vacuolar da camada basal), 2. Liquenoide (infiltrado inflamatório em banda obscurecendo a junção dermoepidérmica)."
+            },
+            {
+                frontTitle: "Interface Vacuolar: Eritema Multiforme",
+                frontContent: "Achados no Eritema Multiforme (Interface Vacuolar)?",
+                backTitle: "Achados: Eritema Multiforme",
+                backContent: "Degeneração vacuolar da camada basal, necrose de queratinócitos esparsos ou confluentes, infiltrado linfocitário perivascular."
+            },
+            {
+                frontTitle: "Interface Vacuolar: PLEVA",
+                frontContent: "Achados na Pitiríase Liquenoide e Varioliforme Aguda (PLEVA)?",
+                backTitle: "Achados: PLEVA",
+                backContent: "Paraceratose, degeneração vacuolar, necrose de queratinócitos, exocitose de linfócitos e hemácias, infiltrado liquenoide/perivascular."
+            },
+            {
+                frontTitle: "Interface Liquenoide: Líquen Plano",
+                frontContent: "Achados clássicos do Líquen Plano?",
+                backTitle: "Achados: Líquen Plano",
+                backContent: "Hiperceratose, hipergranulose (frequentemente em 'cunha'), acantose irregular ('dentes de serra'), degeneração vacuolar da basal, infiltrado linfocitário denso em banda na derme papilar, corpos de Civatte."
+            },
+            {
+                frontTitle: "Interface Liquenoide: Lúpus Discoide",
+                frontContent: "Achados no Lúpus Eritematoso Discoide (padrão liquenoide)?",
+                backTitle: "Achados: Lúpus Discoide",
+                backContent: "Atrofia epidérmica, degeneração vacuolar da basal, espessamento da membrana basal, tampões foliculares, infiltrado linfocitário perivascular e perianexial, mucina dérmica aumentada."
+            },
+            // Balonizante
+            {
+                frontTitle: "Perivascular Balonizante: Herpes",
+                frontContent: "Achados citopáticos no Herpes (Simples/Zoster)?",
+                backTitle: "Achados: Herpes",
+                backContent: "Balonização acentuada de queratinócitos, acantólise, células gigantes multinucleadas com amoldamento nuclear, inclusões intranucleares (Cowdry A)."
+            },
+            {
+                frontTitle: "Perivascular Balonizante: Eritema Pigmentar Fixo",
+                frontContent: "Achados no Eritema Pigmentar Fixo?",
+                backTitle: "Achados: Eritema Pigmentar Fixo",
+                backContent: "Alteração vacuolar da interface, necrose de queratinócitos, incontinência pigmentar proeminente, infiltrado com linfócitos e eosinófilos."
+            },
+            // Espongiótica
+            {
+                frontTitle: "Perivascular Espongiótica: Dermatite de Contato Alérgica",
+                frontContent: "Achado característico da Dermatite de Contato Alérgica?",
+                backTitle: "Achado: D. Contato Alérgica",
+                backContent: "Espongiose epidérmica (edema intercelular), formação de vesículas intraepidérmicas, exocitose de linfócitos e eosinófilos."
+            },
+            {
+                frontTitle: "Perivascular Espongiótica: Dermatite Seborreica",
+                frontContent: "Achado na Dermatite Seborreica?",
+                backTitle: "Achado: D. Seborreica",
+                backContent: "Paraceratose nos ombros dos óstios foliculares ('casquetes de paraceratose'), espongiose leve, infiltrado linfohistiocitário superficial."
+            },
+             // Psoriasiforme
+            {
+                frontTitle: "Perivascular Psoriasiforme: Psoríase Vulgar",
+                frontContent: "Achados clássicos da Psoríase Vulgar?",
+                backTitle: "Achados: Psoríase Vulgar",
+                backContent: "Paraceratose confluente, microabscessos de Munro (neutrófilos na córnea), acantose regular com papilas dérmicas alongadas e edemaciadas, vasos tortuosos e dilatados nas papilas."
+            },
+            {
+                frontTitle: "Perivascular Psoriasiforme: Líquen Simples Crônico",
+                frontContent: "Achados no Líquen Simples Crônico (LSC)?",
+                backTitle: "Achados: LSC",
+                backContent: "Hiperceratose compacta acentuada, hipergranulose, acantose irregular e proeminente, fibrose vertical das papilas dérmicas."
+            },
+            {
+                frontTitle: "Perivascular Psoriasiforme: Sífilis Secundária",
+                frontContent: "Célula chave no infiltrado da Sífilis Secundária com padrão psoriasiforme?",
+                backTitle: "Achado: Sífilis Secundária",
+                backContent: "Infiltrado dérmico denso perivascular e intersticial, frequentemente com numerosos plasmócitos. Alterações epidérmicas psoriasiformes e/ou liquenoides."
+            },
+            // Dermatites Nodulares/Difusas
+            {
+                frontTitle: "D. Nodular/Difusa: Classificação Celular",
+                frontContent: "Quais os 5 tipos principais baseados na célula inflamatória predominante?",
+                backTitle: "Classificação Celular",
+                backContent: "1. Linfócitos predominam, 2. Neutrófilos predominam, 3. Misto (Neutrófilos, poeira nuclear, eosinófilos, plasmócitos), 4. Eosinófilos predominam, 5. Histiócitos predominam (Granulomatosas)."
+            },
+            {
+                frontTitle: "D. Nodular/Difusa: Tipos de Granulomas",
+                frontContent: "Quais são os 6 tipos de granulomas ilustrados no material de Ackerman?",
+                backTitle: "Morfologias Granulomatosas",
+                backContent: "1. Tuberculoide, 2. Supurativo, 3. Xantogranuloma, 4. Granuloma em Paliçada, 5. Corpo Estranho, 6. Granuloma Sarcoídeo ('nu')."
+            },
+            {
+                frontTitle: "Granuloma em Paliçada: Granuloma Anular",
+                frontContent: "O que se encontra no centro da paliçada histiocitária no Granuloma Anular?",
+                backTitle: "Centro: Granuloma Anular",
+                backContent: "Depósitos de mucina e colágeno degenerado."
+            },
+            {
+                frontTitle: "Granuloma em Paliçada: Necrobiose Lipoídica",
+                frontContent: "Achados na Necrobiose Lipoídica?",
+                backTitle: "Achados: Necrobiose Lipoídica",
+                backContent: "Granulomas em paliçada com colágeno degenerado em camadas horizontais, espessamento vascular, infiltrado inflamatório misto incluindo plasmócitos. Pode haver fendas de colesterol."
+            },
+            {
+                frontTitle: "Granuloma Sarcoídeo: Sarcoidose",
+                frontContent: "Aspecto dos granulomas na Sarcoidose cutânea?",
+                backTitle: "Aspecto: Sarcoidose",
+                backContent: "Granulomas epitelióides bem formados, 'nus' (com poucos linfócitos na periferia), sem necrose caseosa significativa. Podem conter corpúsculos asteroides ou de Schaumann."
+            },
+            {
+                frontTitle: "Granuloma Sarcoídeo/Tuberculoide: Líquen Nítido",
+                frontContent: "Localização e aspecto do granuloma no Líquen Nítido?",
+                backTitle: "Achado: Líquen Nítido",
+                backContent: "Pequenos granulomas bem circunscritos na derme papilar, frequentemente 'abraçando' as cristas epidérmicas (aspecto de 'bola na garra')."
+            },
+            {
+                frontTitle: "D. Nodular/Difusa: Síndrome de Sweet",
+                frontContent: "Achados na Síndrome de Sweet (Dermatose Neutrofílica Febril Aguda)?",
+                backTitle: "Achados: Síndrome de Sweet",
+                backContent: "Edema maciço da derme papilar, infiltrado dérmico difuso e denso de neutrófilos com leucocitoclasia, sem vasculite verdadeira."
+            },
+            // Vasculites
+            {
+                frontTitle: "Vasculite Leucocitoclástica (VLC)",
+                frontContent: "Tríade histológica da VLC?",
+                backTitle: "Tríade: VLC",
+                backContent: "1. Infiltrado neutrofílico perivascular e na parede vascular, 2. Leucocitoclasia (poeira nuclear), 3. Deposição de fibrina na parede vascular (necrose fibrinoide)."
+            },
+            {
+                frontTitle: "Vasculite Séptica",
+                frontContent: "Diferencial da Vasculite Séptica para a VLC?",
+                backTitle: "Diferencial: Vasculite Séptica",
+                backContent: "Presença de microorganismos (bactérias, fungos) nos vasos ou perivascular, trombos vasculares, infiltrado neutrofílico pode ser menos proeminente que na VLC clássica."
+            },
+            {
+                frontTitle: "Poliarterite Nodosa Cutânea (PAN)",
+                frontContent: "Tipo de vaso afetado na PAN cutânea?",
+                backTitle: "Vasos: PAN Cutânea",
+                backContent: "Artérias de pequeno e médio calibre na derme profunda e tecido subcutâneo, com inflamação transmural e necrose fibrinoide."
+            },
+            // Dermatites Vesicobolhosas
+            {
+                frontTitle: "D. Vesicobolhosa: Localização da Clivagem",
+                frontContent: "Quais as duas localizações principais da clivagem na D. Vesicobolhosa?",
+                backTitle: "Localização da Clivagem",
+                backContent: "1. Intraepidérmica (dentro da epiderme), 2. Subepidérmica (abaixo da epiderme, na junção dermoepidérmica)."
+            },
+            {
+                frontTitle: "Vesicobolhosa Intraepidérmica: Pênfigo Vulgar",
+                frontContent: "Nível de clivagem acantolítica no Pênfigo Vulgar?",
+                backTitle: "Clivagem: Pênfigo Vulgar",
+                backContent: "Suprabasal, com queratinócitos basais permanecendo aderidos à derme (aspecto de 'fileira de lápides')."
+            },
+            {
+                frontTitle: "Vesicobolhosa Intraepidérmica: Pênfigo Foliáceo",
+                frontContent: "Nível de clivagem acantolítica no Pênfigo Foliáceo?",
+                backTitle: "Clivagem: Pênfigo Foliáceo",
+                backContent: "Alta na epiderme, geralmente na camada granulosa ou subcórnea."
+            },
+            {
+                frontTitle: "Vesicobolhosa Subepidérmica: Penfigoide Bolhoso",
+                frontContent: "Célula inflamatória predominante na bolha do Penfigoide Bolhoso?",
+                backTitle: "Célula: Penfigoide Bolhoso",
+                backContent: "Eosinófilos, tanto na cavidade da bolha quanto no infiltrado dérmico."
+            },
+            {
+                frontTitle: "Vesicobolhosa Subepidérmica: Dermatite Herpetiforme",
+                frontContent: "Localização dos neutrófilos na Dermatite Herpetiforme?",
+                backTitle: "Localização: Dermatite Herpetiforme",
+                backContent: "Microabscessos de neutrófilos nas papilas dérmicas, com deposição de IgA granular na JDE."
+            },
+            {
+                frontTitle: "Vesicobolhosa Subepidérmica: Porfiria Cutânea Tarda",
+                frontContent: "Achados na Porfiria Cutânea Tarda?",
+                backTitle: "Achados: Porfiria Cutânea Tarda",
+                backContent: "Bolha subepidérmica pauci-inflamatória, festonamento da base da bolha (papilas dérmicas protruindo para a cavidade), paredes vasculares espessadas e hialinizadas na derme papilar."
+            },
+            // Pustulosas
+            {
+                frontTitle: "D. Pustulosa: Psoríase Pustulosa",
+                frontContent: "Localização da pústula na Psoríase Pustulosa?",
+                backTitle: "Pústula: Psoríase Pustulosa",
+                backContent: "Pústula espongiforme de Kogoj (acúmulo de neutrófilos na porção superior da epiderme, frequentemente subcórnea)."
+            },
+            {
+                frontTitle: "D. Pustulosa: PEGA",
+                frontContent: "Célula inflamatória que pode acompanhar neutrófilos na PEGA?",
+                backTitle: "Célula: PEGA",
+                backContent: "Eosinófilos podem estar presentes nas pústulas subcórneas não foliculares."
+            },
+            // Foliculites / Alopécias
+            {
+                frontTitle: "Foliculite/Perifoliculite: Líquen Plano Pilar",
+                frontContent: "Infiltrado e alterações no Líquen Plano Pilar (LPP)?",
+                backTitle: "Achados: LPP",
+                backContent: "Infiltrado linfocitário liquenoide ao redor do infundíbulo e istmo folicular, com alterações de interface no epitélio folicular externo, fibrose perifolicular lamelar e perda de glândulas sebáceas."
+            },
+            {
+                frontTitle: "Foliculite/Perifoliculite: Lúpus Discoide (Couro Cabeludo)",
+                frontContent: "Achados no Lúpus Discoide afetando folículos?",
+                backTitle: "Achados: Lúpus Discoide (Folículos)",
+                backContent: "Infiltrado linfocitário perifolicular e perivascular, degeneração vacuolar da interface do epitélio folicular, espessamento da membrana basal folicular, tampões queratóticos, e posterior fibrose cicatricial."
+            },
+            {
+                frontTitle: "Foliculite/Perifoliculite: Foliculite Decalvante",
+                frontContent: "Célula predominante no infiltrado da Foliculite Decalvante?",
+                backTitle: "Célula: Foliculite Decalvante",
+                backContent: "Infiltrado predominantemente neutrofílico no infundíbulo e perifolicular, podendo formar abscessos. Plasmócitos são comuns em lesões crônicas. Resulta em alopécia cicatricial."
+            },
+            {
+                frontTitle: "Alopécia Não Cicatricial: Alopécia Areata",
+                frontContent: "Infiltrado característico na Alopécia Areata?",
+                backTitle: "Infiltrado: Alopécia Areata",
+                backContent: "Infiltrado linfocitário denso peribulbar (ao redor do bulbo piloso), classicamente descrito como 'enxame de abelhas'."
+            },
+            {
+                frontTitle: "Alopécia Não Cicatricial: Alopécia Androgenética",
+                frontContent: "Principal alteração folicular na Alopécia Androgenética?",
+                backTitle: "Alteração: A. Androgenética",
+                backContent: "Miniaturização progressiva dos folículos pilosos terminais, que se transformam em pelos velus. Aumento da proporção de pelos telógenos e velus."
+            },
+            // Dermatites Fibrosantes
+            {
+                frontTitle: "D. Fibrosante: Morfeia",
+                frontContent: "Achados na derme na Morfeia (Esclerodermia Localizada)?",
+                backTitle: "Achados: Morfeia",
+                backContent: "Feixes de colágeno espessados, hialinizados e compactados na derme, infiltrado linfoplasmocitário perivascular e intersticial (mais proeminente nas fases iniciais), atrofia de anexos cutâneos."
+            },
+            {
+                frontTitle: "D. Fibrosante: Líquen Escleroso",
+                frontContent: "Localização da esclerose e alterações epidérmicas no Líquen Escleroso?",
+                backTitle: "Achados: Líquen Escleroso",
+                backContent: "Edema e esclerose (hialinização) da derme papilar, atrofia epidérmica com achatamento das cristas, hiperceratose, degeneração hidrópica da camada basal."
+            },
+            {
+                frontTitle: "D. Fibrosante: Queloide",
+                frontContent: "Característica do colágeno no Queloide?",
+                backTitle: "Colágeno: Queloide",
+                backContent: "Feixes de colágeno espessos, hialinizados, eosinofílicos, grosseiros e desorganizados na derme reticular."
+            },
+            // Paniculites
+            {
+                frontTitle: "Paniculite: Classificação Principal",
+                frontContent: "Quais as duas principais localizações do processo inflamatório na paniculite?",
+                backTitle: "Localização da Inflamação",
+                backContent: "1. Septal (inflamação predominantemente nos septos de tecido conjuntivo do subcutâneo), 2. Lobular (inflamação predominantemente nos lóbulos de gordura do subcutâneo)."
+            },
+            {
+                frontTitle: "Paniculite Septal: Eritema Nodoso",
+                frontContent: "Achados no Eritema Nodoso (paniculite septal sem vasculite primária)?",
+                backTitle: "Achados: Eritema Nodoso",
+                backContent: "Alargamento dos septos por edema, fibrina e infiltrado inflamatório misto (linfócitos, histiócitos, neutrófilos, eosinófilos). Granulomas radiais de Miescher podem estar presentes. Sem vasculite significativa."
+            },
+            {
+                frontTitle: "Paniculite Lobular: Paniculite Lúpica",
+                frontContent: "Achados na Paniculite Lúpica (Lúpus Profundo)?",
+                backTitle: "Achados: Paniculite Lúpica",
+                backContent: "Infiltrado linfoplasmocitário denso nos lóbulos adiposos, necrose gordurosa, hialinização da gordura, calcificação distrófica frequente. Pode haver alterações epidérmicas de lúpus."
+            },
+            {
+                frontTitle: "Paniculite Lobular: Paniculite Pancreática",
+                frontContent: "Achado característico na Paniculite Pancreática?",
+                backTitle: "Achado: P. Pancreática",
+                backContent: "Necrose gordurosa extensa com adipócitos 'fantasmas' (sem núcleos, com citoplasma granular e basofílico devido à saponificação), infiltrado neutrofílico."
+            },
+             {
+                frontTitle: "Alopécia: Categorias Gerais",
+                frontContent: "Quais são as duas grandes categorias de alopécia baseadas na presença de infiltrado inflamatório (conforme Ackerman simplificado)?",
+                backTitle: "Classificação da Alopécia",
+                backContent: "1. Ausência de infiltrado inflamatório significativo (ex: Alopécia Androgenética, Eflúvio Telógeno), 2. Com infiltrado inflamatório (ex: Alopécia Areata, Líquen Plano Pilar, Lúpus Discoide)."
+            }
+
+        ];
+
+        const flashcardGrid = document.getElementById('flashcardGrid');
+
+        flashcardData.forEach(data => {
+            const cardContainer = document.createElement('div');
+            cardContainer.className = 'flashcard-container';
+
+            const card = document.createElement('div');
+            card.className = 'flashcard';
+
+            const frontFace = document.createElement('div');
+            frontFace.className = 'flashcard-face flashcard-front';
+            frontFace.innerHTML = `
+                <h3 class="flashcard-title">${data.frontTitle}</h3>
+                <p class="flashcard-content">${data.frontContent}</p>
+            `;
+
+            const backFace = document.createElement('div');
+            backFace.className = 'flashcard-face flashcard-back';
+            backFace.innerHTML = `
+                <h3 class="flashcard-title">${data.backTitle}</h3>
+                <p class="flashcard-content">${data.backContent}</p>
+            `;
+
+            card.appendChild(frontFace);
+            card.appendChild(backFace);
+            cardContainer.appendChild(card);
+            flashcardGrid.appendChild(cardContainer);
+
+            card.addEventListener('click', () => {
+                card.classList.toggle('is-flipped');
+            });
+        });
+    </script>
+
+</body>
+</html>
