@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GestObras - Produtividade</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background-color: #2563eb;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .container {
+            flex: 1;
+            padding: 1rem;
+            max-width: 100%;
+        }
+        
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
+        
+        .month-selector {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .month-btn {
+            background: none;
+            border: none;
+            color: #2563eb;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .month-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .summary-title {
+            font-size: 1.125rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .summary-item {
+            text-align: center;
+            padding: 1rem;
+            background-color: #f3f4f6;
+            border-radius: 0.5rem;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+        
+        .summary-value.green {
+            color: #10b981;
+        }
+        
+        .summary-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .teams-section {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .teams-title {
+            font-size: 1.125rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .team-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .team-item:last-child {
+            border-bottom: none;
+        }
+        
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .team-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .team-value {
+            font-weight: bold;
+            color: #10b981;
+            font-size: 1.125rem;
+        }
+        
+        .team-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .detail-item {
+            color: #6b7280;
+        }
+        
+        .detail-value {
+            color: #1f2937;
+            font-weight: 500;
+        }
+        
+        .services-section {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .services-title {
+            font-size: 1.125rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .service-name {
+            font-size: 0.875rem;
+            color: #1f2937;
+            flex: 1;
+        }
+        
+        .service-production {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-right: 1rem;
+        }
+        
+        .service-status {
+            width: 4rem;
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+        }
+        
+        .status-complete {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-progress {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .calc-button {
+            width: 100%;
+            background-color: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .calc-button:active {
+            background-color: #7c3aed;
+        }
+        
+        .bottom-nav {
+            background: white;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            color: #6b7280;
+            font-size: 0.75rem;
+            transition: color 0.2s;
+        }
+        
+        .nav-item.active {
+            color: #2563eb;
+        }
+        
+        .nav-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="back-btn">←</a>
+        <h1>Produtividade</h1>
+        <div style="width: 2.5rem;"></div>
+    </header>
+
+    <main class="container">
+        <h2 class="page-title">Análise de Produtividade</h2>
+        
+        <!-- Seletor de Mês -->
+        <div class="month-selector">
+            <button class="month-btn">‹</button>
+            <span class="month-text">Junho 2025</span>
+            <button class="month-btn">›</button>
+        </div>
+        
+        <!-- Resumo Geral -->
+        <div class="summary-card">
+            <h3 class="summary-title">Resumo Mensal</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-value">550 m²</div>
+                    <div class="summary-label">Total Produzido</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value green">R$ 21.850</div>
+                    <div class="summary-label">Valor Total</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value">85%</div>
+                    <div class="summary-label">Média Produtividade</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value">12</div>
+                    <div class="summary-label">Serviços Concluídos</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Produtividade por Equipe -->
+        <div class="teams-section">
+            <h3 class="teams-title">Produtividade por Equipe</h3>
+            
+            <div class="team-item">
+                <div class="team-header">
+                    <span class="team-name">Equipe A - Alvenaria</span>
+                    <span class="team-value">R$ 5.250,00</span>
+                </div>
+                <div class="team-details">
+                    <div class="detail-item">
+                        Produção: <span class="detail-value">150 m²</span>
+                    </div>
+                    <div class="detail-item">
+                        Valor/m²: <span class="detail-value">R$ 35,00</span>
+                    </div>
+                    <div class="detail-item">
+                        Eficiência: <span class="detail-value">85%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-item">
+                <div class="team-header">
+                    <span class="team-name">Equipe B - Pintura</span>
+                    <span class="team-value">R$ 7.000,00</span>
+                </div>
+                <div class="team-details">
+                    <div class="detail-item">
+                        Produção: <span class="detail-value">280 m²</span>
+                    </div>
+                    <div class="detail-item">
+                        Valor/m²: <span class="detail-value">R$ 25,00</span>
+                    </div>
+                    <div class="detail-item">
+                        Eficiência: <span class="detail-value">92%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-item">
+                <div class="team-header">
+                    <span class="team-name">Equipe C - Elétrica</span>
+                    <span class="team-value">R$ 9.600,00</span>
+                </div>
+                <div class="team-details">
+                    <div class="detail-item">
+                        Produção: <span class="detail-value">120 pts</span>
+                    </div>
+                    <div class="detail-item">
+                        Valor/pt: <span class="detail-value">R$ 80,00</span>
+                    </div>
+                    <div class="detail-item">
+                        Eficiência: <span class="detail-value">78%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Serviços do Mês -->
+        <div class="services-section">
+            <h3 class="services-title">Serviços do Mês</h3>
+            
+            <div class="service-item">
+                <span class="service-name">Reboco - Apt 101</span>
+                <span class="service-production">20 m²</span>
+                <span class="service-status status-complete">100%</span>
+            </div>
+            
+            <div class="service-item">
+                <span class="service-name">Pintura - Área Comum</span>
+                <span class="service-production">150 m²</span>
+                <span class="service-status status-progress">75%</span>
+            </div>
+            
+            <div class="service-item">
+                <span class="service-name">Elétrica - Bloco A</span>
+                <span class="service-production">120 pts</span>
+                <span class="service-status status-complete">100%</span>
+            </div>
+            
+            <div class="service-item">
+                <span class="service-name">Reboco - Apt 102</span>
+                <span class="service-production">25 m²</span>
+                <span class="service-status status-complete">100%</span>
+            </div>
+        </div>
+        
+        <button class="calc-button">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm4 8h-2v-6h2v6z"/>
+            </svg>
+            Calcular Pagamentos
+        </button>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span>Início</span>
+        </a>
+        <a href="obras.html" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>Obras</span>
+        </a>
+        <a href="funcionarios.html" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            <span>Funcionários</span>
+        </a>
+        <a href="servicos.html" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+            </svg>
+            <span>Serviços</span>
+        </a>
+        <a href="relatorios.html" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+            </svg>
+            <span>Relatórios</span>
+        </a>
+    </nav>
+</body>
+</html>

@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GestObras - Serviços</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background-color: #2563eb;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .container {
+            flex: 1;
+            padding: 1rem;
+            max-width: 100%;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .add-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .add-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        
+        .service-title {
+            font-size: 1.125rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+        
+        .service-location {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .service-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .service-status.completed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .service-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+        
+        .info-value {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #1f2937;
+        }
+        
+        .progress-section {
+            margin-bottom: 1rem;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .progress-value {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #1f2937;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background-color: #e5e7eb;
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        
+        .add-production-btn {
+            width: 100%;
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        
+        .add-production-btn:active {
+            background-color: #059669;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-radius: 1rem 1rem 0 0;
+            padding: 1.5rem;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            color: #374151;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            min-height: 4rem;
+            resize: vertical;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 10rem;
+            overflow-y: auto;
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 0.25rem;
+        }
+        
+        .checkbox-item input {
+            margin-right: 0.5rem;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        .save-btn {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .save-btn:active {
+            background-color: #1d4ed8;
+        }
+        
+        .bottom-nav {
+            background: white;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            color: #6b7280;
+            font-size: 0.75rem;
+            transition: color 0.2s;
+        }
+        
+        .nav-item.active {
+            color: #2563eb;
+        }
+        
+        .nav-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="back-btn">←</a>
+        <h1>Serviços</h1>
+        <div style="width: 2.5rem;"></div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2 class="page-title">Serviços em Andamento</h2>
+            <button class="add-btn" onclick="openServiceModal()">+</button>
+        </div>
+        
+        <!-- Serviço 1 -->
+        <div class="service-card">
+            <div class="service-header">
+                <div>
+                    <h3 class="service-title">Reboco - Apartamento 101</h3>
+                    <p class="service-location">Residencial Paraíso</p>
+                </div>
+                <span class="service-status">Em andamento</span>
+            </div>
+            
+            <div class="service-info">
+                <div class="info-item">
+                    <span class="info-label">Equipe</span>
+                    <span class="info-value">Equipe A</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Responsável</span>
+                    <span class="info-value">João Silva</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Início</span>
+                    <span class="info-value">10/06/2025</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Previsão</span>
+                    <span class="info-value">15/06/2025</span>
+                </div>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-label">Progresso</span>
+                    <span class="progress-value">50% (10m² de 20m²)</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%"></div>
+                </div>
+            </div>
+            
+            <button class="add-production-btn" onclick="openProductionModal()">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                </svg>
+                Registrar Produção
+            </button>
+        </div>
+        
+        <!-- Serviço 2 -->
+        <div class="service-card">
+            <div class="service-header">
+                <div>
+                    <h3 class="service-title">Pintura - Área Comum</h3>
+                    <p class="service-location">Residencial Paraíso</p>
+                </div>
+                <span class="service-status">Em andamento</span>
+            </div>
+            
+            <div class="service-info">
+                <div class="info-item">
+                    <span class="info-label">Equipe</span>
+                    <span class="info-value">Equipe B</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Responsável</span>
+                    <span class="info-value">Maria Santos</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Início</span>
+                    <span class="info-value">12/06/2025</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Previsão</span>
+                    <span class="info-value">20/06/2025</span>
+                </div>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-label">Progresso</span>
+                    <span class="progress-value">30% (45m² de 150m²)</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 30%"></div>
+                </div>
+            </div>
+            
+            <button class="add-production-btn" onclick="openProductionModal()">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                </svg>
+                Registrar Produção
+            </button>
+        </div>
+        
+        <!-- Serviço 3 -->
+        <div class="service-card">
+            <div class="service-header">
+                <div>
+                    <h3 class="service-title">Instalação Elétrica - Bloco A</h3>
+                    <p class="service-location">Condomínio Villa Verde</p>
+                </div>
+                <span class="service-status completed">Concluído</span>
+            </div>
+            
+            <div class="service-info">
+                <div class="info-item">
+                    <span class="info-label">Equipe</span>
+                    <span class="info-value">Equipe C</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Responsável</span>
+                    <span class="info-value">Carlos Oliveira</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Início</span>
+                    <span class="info-value">05/06/2025</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Conclusão</span>
+                    <span class="info-value">13/06/2025</span>
+                </div>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-label">Progresso</span>
+                    <span class="progress-value">100% (120 pontos)</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%; background-color: #10b981;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Novo Serviço -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Novo Serviço</h3>
+                <button class="close-btn" onclick="closeServiceModal()">×</button>
+            </div>
+            
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Nome do Serviço</label>
+                    <input type="text" class="form-input" placeholder="Ex: Reboco Apartamento 102">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Obra</label>
+                    <select class="form-select">
+                        <option>Residencial Paraíso</option>
+                        <option>Edifício Comercial Plaza</option>
+                        <option>Condomínio Villa Verde</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tipo de Serviço</label>
+                    <select class="form-select">
+                        <option>Alvenaria</option>
+                        <option>Reboco</option>
+                        <option>Pintura</option>
+                        <option>Elétrica</option>
+                        <option>Hidráulica</option>
+                        <option>Gesso</option>
+                        <option>Piso/Azulejo</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Equipe Responsável</label>
+                    <select class="form-select">
+                        <option>Equipe A</option>
+                        <option>Equipe B</option>
+                        <option>Equipe C</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Meta de Produção</label>
+                    <input type="text" class="form-input" placeholder="Ex: 50">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Unidade de Medida</label>
+                    <select class="form-select">
+                        <option>m²</option>
+                        <option>m³</option>
+                        <option>metros lineares</option>
+                        <option>unidades</option>
+                        <option>pontos</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Descrição</label>
+                    <textarea class="form-textarea" placeholder="Detalhes do serviço..."></textarea>
+                </div>
+                
+                <button type="button" class="save-btn" onclick="closeServiceModal()">Criar Serviço</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Produção -->
+    <div id="productionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Registrar Produção</h3>
+                <button class="close-btn" onclick="closeProductionModal()">×</button>
+            </div>
+            
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Data</label>
+                    <input type="date" class="form-input" value="2025-06-14">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Quantidade Produzida</label>
+                    <input type="number" class="form-input" placeholder="10">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Localização</label>
+                    <input type="text" class="form-input" placeholder="Ex: Apartamento 101">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Funcionários Presentes</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked>
+                            João Silva
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked>
+                            Pedro Almeida
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox">
+                            Ana Costa
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked>
+                            Roberto Ferreira
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Observações</label>
+                    <textarea class="form-textarea" placeholder="Anotações sobre a produção..."></textarea>
+                </div>
+                
+                <button type="button" class="save-btn" onclick="closeProductionModal()">Salvar Produção</button>
+            </form>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span>Início</span>
+        </a>
+        <a href="obras.html" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>Obras</span>
+        </a>
+        <a href="funcionarios.html" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            <span>Funcionários</span>
+        </a>
+        <a href="servicos.html" class="nav-item active">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+            </svg>
+            <span>Serviços</span>
+        </a>
+        <a href="relatorios.html" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+            </svg>
+            <span>Relatórios</span>
+        </a>
+    </nav>
+
+    <script>
+        function openServiceModal() {
+            document.getElementById('serviceModal').style.display = 'block';
+        }
+        
+        function closeServiceModal() {
+            document.getElementById('serviceModal').style.display = 'none';
+        }
+        
+        function openProductionModal() {
+            document.getElementById('productionModal').style.display = 'block';
+        }
+        
+        function closeProductionModal() {
+            document.getElementById('productionModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
